@@ -189,13 +189,42 @@
 
   function final() {
     respuestas.persona_favorita = document.getElementById('persona').value;
-    enviarDatos();
+    
     game.innerHTML = `
       <div class='emoji'>🏆</div>
       <h1>Misión completada</h1>
-      <p>Gracias por jugar. Tu recompensa te espera ☕</p>
-    `;
+            <p>Gracias por jugar. Tu recompensa te espera ☕</p>
+                `;
+    enviarRespuestas();
   }
+<script>
+function enviarRespuestas() {
+  document.getElementById("f_nombre").value = respuestas.nombre;
+  document.getElementById("f_mision").value = respuestas.mision;
+  document.getElementById("f_cultura").value = respuestas.cultura;
+  document.getElementById("f_gustos").value = respuestas.gustos;
+  document.getElementById("f_reto").value = respuestas.reto;
+  document.getElementById("f_lugar").value = respuestas.lugar;
+  document.getElementById("f_persona").value = respuestas.persona_favorita;
+
+  document.getElementById("formulario").submit();
+}
 </script>
+
+  <form id="formulario" action="https://docs.google.com/forms/d/e/1FAIpQLScIzmolw5aF8ekxAIz6DP-SAZv6fZpws9B-wlWFpaeasRVLsQ/formResponse"
+      method="POST" target="hidden_iframe">
+
+  <input type="hidden" name="entry.1738743250" id="f_nombre">
+  <input type="hidden" name="entry.1500979489" id="f_mision">
+  <input type="hidden" name="entry.1028434976" id="f_cultura">
+  <input type="hidden" name="entry.493827615" id="f_gustos">
+  <input type="hidden" name="entry.1876209483" id="f_reto">
+  <input type="hidden" name="entry.2093847561" id="f_lugar">
+  <input type="hidden" name="entry.3847561209" id="f_persona">
+
+</form>
+
+<iframe name="hidden_iframe" style="display:none;"></iframe>
+
 </body>
 </html>
