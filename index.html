@@ -2,229 +2,189 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚔️ Misión Picnic Secreta</title>
+  <title>Misión Picnic Secreta</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Trebuchet MS', Arial, sans-serif;
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ffe6f0, #e0f7ff);
+      text-align: center;
+      padding: 30px;
     }
-    .card {
-      background: rgba(0,0,0,0.6);
-      border-radius: 20px;
+    #game {
+      background: white;
       padding: 25px;
-      max-width: 420px;
-      width: 90%;
-      box-shadow: 0 0 25px rgba(0,255,255,0.2);
-      animation: fadeIn 1s ease;
-    }
-    h1 { text-align: center; font-size: 1.8em; }
-    p { text-align: center; line-height: 1.4; }
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 10px;
-      border: none;
-      font-size: 1em;
+      border-radius: 15px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
     button {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 12px;
+      padding: 10px 20px;
+      margin: 10px;
       border: none;
-      background: linear-gradient(135deg, #00f5d4, #4cc9f0);
-      color: #000;
-      font-weight: bold;
-      font-size: 1em;
+      border-radius: 10px;
       cursor: pointer;
+      background: #ff7eb3;
+      color: white;
+      font-size: 16px;
     }
-    button:hover { opacity: 0.85; }
-    .bad { background: linear-gradient(135deg, #ff4d6d, #c9184a); color: #fff; }
-    .emoji { font-size: 2.2em; text-align: center; margin: 10px 0; }
-    @keyframes fadeIn { from {opacity:0; transform:scale(0.9);} to {opacity:1; transform:scale(1);} }
+    input {
+      padding: 8px;
+      margin: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 80%;
+    }
+    .emoji {
+      font-size: 40px;
+    }
   </style>
 </head>
+
 <body>
-  <div class="card" id="game"></div>
+
+<div id="game"></div>
+
+<!-- FORMULARIO OCULTO -->
+<form id="formulario"
+  action="https://docs.google.com/forms/d/e/1FAIpQLScIzmolw5aF8ekxAIz6DP-SAZv6fZpws9B-wlWFpaeasRVLsQ/formResponse"
+  method="POST"
+  target="hidden_iframe">
+
+  <input type="hidden" name="entry.1738743250" id="f_nombre">
+  <input type="hidden" name="entry.1500979489" id="f_mision">
+  <input type="hidden" name="entry.1028434976" id="f_cultura">
+  <input type="hidden" name="entry.493827615"  id="f_gustos">
+  <input type="hidden" name="entry.1876209483" id="f_reto">
+  <input type="hidden" name="entry.2093847561" id="f_lugar">
+  <input type="hidden" name="entry.3847561209" id="f_persona">
+</form>
+
+<iframe name="hidden_iframe" style="display:none;"></iframe>
 
 <script>
-  const game = document.getElementById('game');
-  let respuestas = {};
+  const game = document.getElementById("game");
 
-  const GOOGLE_SCRIPT_URL = "PEGA_AQUI_TU_URL";
-
-  function enviarDatos() {
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(respuestas)
-    });
-  }
+  let nombreJugador = "";
+  let aceptaMision = "";
+  let respuestaCultura = "";
+  let gustos = "";
+  let retoMental = "";
+  let lugarElegido = "";
+  let personaFavorita = "";
 
   inicio();
 
   function inicio() {
     game.innerHTML = `
-      <h1>⚔️ Bienvenido a la misión secreta</h1>
-      <p>Antes de comenzar, identifica tu espíritu.</p>
-      <button onclick="rol('Guerrero')">🛡️ Guerrero</button>
-      <button onclick="rol('Guerrera')">⚔️ Guerrera</button>
+      <h1>🗡️ Misión Picnic Secreta</h1>
+      <p>Primero lo primero… ¿eres guerrera o guerrero?</p>
+      <button onclick="genero('Guerrera')">Guerrera</button>
+      <button onclick="genero('Guerrero')">Guerrero</button>
     `;
   }
 
-  function rol(tipo) {
-    respuestas.rol = tipo;
+  function genero(tipo) {
     game.innerHTML = `
-      <h1>${tipo}</h1>
-      <p>Escribe el nombre que desees usar:</p>
-      <input id="nombre" placeholder="Nombre secreto" />
-      <button onclick="continuar()">Continuar</button>
+      <h2>✨ Bienvenida ${tipo}</h2>
+      <p>¿Aceptas continuar la misión secreta?</p>
+      <button onclick="mision('Sí')">Sí, quiero el premio 🎁</button>
+      <button onclick="mision('No')">No 😴</button>
     `;
   }
 
-  function continuar() {
-    respuestas.nombre = document.getElementById('nombre').value || respuestas.rol;
+  function mision(respuesta) {
+    aceptaMision = respuesta;
+    if (respuesta === "No") {
+      game.innerHTML = `<h2>❌ Misión cancelada</h2><p>Vuelve cuando estés lista…</p>`;
+      return;
+    }
+
     game.innerHTML = `
-      <h1>Atención ${respuestas.nombre}</h1>
-      <p>¿Estás listo para continuar la misión?</p>
-      <button onclick="reto1()">✅ Sí, quiero el premio</button>
-      <button class="bad" onclick="fallo('El sistema ha rechazado tu decisión 💀')">❌ No</button>
+      <p>¿Cómo te llamas, valiente?</p>
+      <input id="nombre" placeholder="Tu nombre">
+      <button onclick="guardarNombre()">Continuar</button>
     `;
   }
 
-  function fallo(msg) {
-    game.innerHTML = `<div class='emoji'>❌</div><p>${msg}</p><p>Reiniciando misión...</p>`;
-    setTimeout(() => location.reload(), 2500);
-  }
-
-  function reto1() {
+  function guardarNombre() {
+    nombreJugador = document.getElementById("nombre").value;
     game.innerHTML = `
-      <h1>Reto 1 – Cultura general</h1>
-      <p>¿Cuántos continentes hay en el mundo?</p>
-      <button onclick="reto2(true)">7</button>
-      <button onclick="reto2(false)">5</button>
-      <button onclick="reto2(false)">6</button>
+      <p>${nombreJugador}, ¿prefieres anime, superhéroes o películas?</p>
+      <button onclick="cultura('Anime')">Anime</button>
+      <button onclick="cultura('Superhéroes')">Superhéroes</button>
+      <button onclick="cultura('Películas')">Películas</button>
     `;
   }
 
-  function reto2(ok) {
-    if (!ok) return fallo('Respuesta incorrecta');
-    respuestas.cultura = 'Correcto';
-    game.innerHTML = `<div class='emoji'>✨</div><p>Bien hecho</p><button onclick="gustos()">Continuar</button>`;
-  }
-
-  function gustos() {
+  function cultura(tipo) {
+    respuestaCultura = tipo;
     game.innerHTML = `
-      <h1>Reto 2 – Gustos</h1>
-      <p>Elige lo que más te gusta:</p>
-      <button onclick="sub('Anime')">🎌 Anime</button>
-      <button onclick="sub('Superhéroes')">🦸 Superhéroes</button>
-      <button onclick="sub('Películas')">🎬 Películas</button>
+      <p>¿Cuál es tu ${tipo} favorito?</p>
+      <input id="gusto" placeholder="Escribe aquí">
+      <button onclick="guardarGusto()">Seguir</button>
     `;
   }
 
-  function sub(tipo) {
-    respuestas.gusto_tipo = tipo;
+  function guardarGusto() {
+    gustos = document.getElementById("gusto").value;
     game.innerHTML = `
-      <h1>${tipo}</h1>
-      <p>¿Cuál es tu favorito?</p>
-      <input id="fav" placeholder="Escribe aquí" />
-      <button onclick="guardarSub()">Continuar</button>
+      <p>Reto mental 🤯: ¿2 + 2 x 2?</p>
+      <button onclick="reto('6')">6</button>
+      <button onclick="reto('8')">8</button>
     `;
   }
 
-  function guardarSub() {
-    respuestas.gusto_nombre = document.getElementById('fav').value;
-    mental();
-  }
+  function reto(respuesta) {
+    if (respuesta !== "6") {
+      game.innerHTML = `<div class="emoji">❌</div><p>Respuesta incorrecta. Intenta de nuevo.</p>`;
+      setTimeout(inicio, 2000);
+      return;
+    }
 
-  function mental() {
+    retoMental = respuesta;
     game.innerHTML = `
-      <h1>Reto 3 – Juego mental</h1>
-      <p>Un tren eléctrico va al norte y el viento al sur. ¿A dónde va el humo?</p>
-      <button onclick="mentalR(false)">Norte</button>
-      <button onclick="mentalR(false)">Sur</button>
-      <button onclick="mentalR(true)">No hay humo 😏</button>
+      <p>Elige un lugar para el picnic 🌸</p>
+      <button onclick="lugar('Playa')">Playa</button>
+      <button onclick="lugar('Montaña')">Montaña</button>
+      <button onclick="lugar('Parque')">Parque</button>
     `;
   }
 
-  function mentalR(ok) {
-    if (!ok) return fallo('La mente falló 🧠');
-    respuestas.mental = 'Correcto';
-    game.innerHTML = `<div class='emoji'>⚡</div><p>Has ganado KI</p><button onclick="lugares()">Último nivel</button>`;
-  }
-
-  function lugares() {
+  function lugar(opcion) {
+    lugarElegido = opcion;
     game.innerHTML = `
-      <h1>Reto 4 – Lugares</h1>
-      <p>¿Dónde prefieres estar ahora?</p>
-      <button onclick="guardarLugar('Montaña')">🏔️ Montaña</button>
-      <button onclick="guardarLugar('Ciudad')">🌆 Ciudad</button>
-      <button onclick="guardarLugar('Mar')">🌊 Mar</button>
-    `;
-  }
-
-  function guardarLugar(l) {
-    respuestas.lugar = l;
-    finalPregunta();
-  }
-
-  function finalPregunta() {
-    game.innerHTML = `
-      <h1>💛 Último paso</h1>
+      <h2>💖 Último paso</h2>
       <p>¿Quién es tu persona favorita del grupo?</p>
-      <input id="persona" placeholder="Nombre" />
+      <input id="persona" placeholder="Nombre">
       <button onclick="final()">Finalizar misión</button>
     `;
   }
 
   function final() {
-    respuestas.persona_favorita = document.getElementById('persona').value;
-    
-    game.innerHTML = `
-      <div class='emoji'>🏆</div>
-      <h1>Misión completada</h1>
-            <p>Gracias por jugar. Tu recompensa te espera ☕</p>
-                `;
+    personaFavorita = document.getElementById("persona").value;
+
     enviarRespuestas();
+
+    game.innerHTML = `
+      <div class="emoji">🏆</div>
+      <h1>Misión completada</h1>
+      <p>Gracias por jugar. Tu recompensa te espera ☕</p>
+    `;
   }
-<script>
-function enviarRespuestas() {
-  document.getElementById("f_nombre").value = respuestas.nombre;
-  document.getElementById("f_mision").value = respuestas.mision;
-  document.getElementById("f_cultura").value = respuestas.cultura;
-  document.getElementById("f_gustos").value = respuestas.gustos;
-  document.getElementById("f_reto").value = respuestas.reto;
-  document.getElementById("f_lugar").value = respuestas.lugar;
-  document.getElementById("f_persona").value = respuestas.persona_favorita;
 
-  document.getElementById("formulario").submit();
-}
+  function enviarRespuestas() {
+    document.getElementById("f_nombre").value = nombreJugador;
+    document.getElementById("f_mision").value = aceptaMision;
+    document.getElementById("f_cultura").value = respuestaCultura;
+    document.getElementById("f_gustos").value = gustos;
+    document.getElementById("f_reto").value = retoMental;
+    document.getElementById("f_lugar").value = lugarElegido;
+    document.getElementById("f_persona").value = personaFavorita;
+
+    document.getElementById("formulario").submit();
+  }
 </script>
-
-  <form id="formulario" action="https://docs.google.com/forms/d/e/1FAIpQLScIzmolw5aF8ekxAIz6DP-SAZv6fZpws9B-wlWFpaeasRVLsQ/formResponse"
-      method="POST" target="hidden_iframe">
-
-  <input type="hidden" name="entry.1738743250" id="f_nombre">
-  <input type="hidden" name="entry.1500979489" id="f_mision">
-  <input type="hidden" name="entry.1028434976" id="f_cultura">
-  <input type="hidden" name="entry.493827615" id="f_gustos">
-  <input type="hidden" name="entry.1876209483" id="f_reto">
-  <input type="hidden" name="entry.2093847561" id="f_lugar">
-  <input type="hidden" name="entry.3847561209" id="f_persona">
-
-</form>
-
-<iframe name="hidden_iframe" style="display:none;"></iframe>
 
 </body>
 </html>
